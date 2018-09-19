@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <sys/types.h>
 #include <request.h>
+#include <response.h>
 #define PORT 8080
 
 int main() {
@@ -16,7 +17,7 @@ int main() {
 	int client_addrlen = sizeof(client_address);
 	char buffer[1024] = {0}; 
 	int opt = 1;
-	char *msg = "Hello, World!";
+	char *msg = "<html><body><h1>HelloWorld</h1></body></html>";
 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
 		std::cout << "Socket failed" << std::endl;
@@ -50,7 +51,11 @@ int main() {
 	valread = read( client_socket , buffer, 1024); 
 	HTTPRequest request = HTTPRequest(buffer);
 	std::cout << request.GetHost() << request.GetMethod() << request.GetPath() << std::endl;
-    send(client_socket , msg , strlen(msg) , 0 ); 
+	HTTPResponse response = HTTPResponse(200, "OK", msg);
+	const char *response_string = response.ToString().c_str();
+	std::cout << response_string << std::endl;
+
+    send(client_socket , response_string, strlen(response_string), 0 ); 
     printf("Hello message sent\n"); 
 
 	return 0;
