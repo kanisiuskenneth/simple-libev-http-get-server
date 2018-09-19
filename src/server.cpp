@@ -9,6 +9,9 @@
 #include <sys/types.h>
 #include <http/request.h>
 #include <http/response.h>
+#include <utils/file.h>
+#include <sstream>
+#include <fstream>
 #define PORT 8080
 
 int main() {
@@ -17,12 +20,13 @@ int main() {
 	int client_addrlen = sizeof(client_address);
 	char buffer[1024] = {0}; 
 	int opt = 1;
-	char *msg = "<html><body><h1>HelloWorld</h1></body></html>";
 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
 		std::cout << "Socket failed" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	
+
 
 	// if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
 	// 	perror("setsockopt");
@@ -47,6 +51,8 @@ int main() {
 		perror("accept");
 		exit(EXIT_FAILURE);
 	}
+
+	std::string msg = File("assets/page1.html").GetContent();
 	
 	valread = read( client_socket , buffer, 1024); 
 	HTTPRequest request = HTTPRequest(buffer);
