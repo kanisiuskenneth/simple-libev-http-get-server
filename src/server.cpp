@@ -7,13 +7,14 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <sys/types.h>
-
+#include <request.h>
 #define PORT 8080
 
 int main() {
-	int server_fd, client_socket;
+	int server_fd, client_socket, valread;
 	struct sockaddr_in client_address;
 	int client_addrlen = sizeof(client_address);
+	char buffer[1024] = {0}; 
 	int opt = 1;
 	char *msg = "Hello, World!";
 
@@ -22,32 +23,35 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 
-	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-		std::cout << "Cannot bind port" << std::endl;
-		exit(EXIT_FAILURE);
-	}
+	// if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+	// 	perror("setsockopt");
+	// 	exit(EXIT_FAILURE);
+	// }
 
 	client_address.sin_family = AF_INET;
 	client_address.sin_addr.s_addr = INADDR_ANY;
 	client_address.sin_port = htons(PORT);
 
 	if (bind(server_fd, (struct sockaddr*)&client_address, sizeof(client_address)) < 0) {
-		std::cout << "Cannot bind port to server" << std::endl;
+		perror("bind");
 		exit(EXIT_FAILURE);
 	}
 
 	if (listen(server_fd, 3) < 0) {
-		std::cout << "Listen failed" << std::endl;
+		perror("listen");
 		exit(EXIT_FAILURE);
 	}
 
 	if ((client_socket = accept(server_fd, (struct sockaddr*)&client_address, (socklen_t*)&client_addrlen)) < 0) {
-		std::cout << "Accepting new socket error" << std::endl;
+		perror("accept");
 		exit(EXIT_FAILURE);
 	}
 	
-	send(client_socket, msg, strlen(msg), 0);
-	std::cout << "message sent" << std::endl;
+	valread = read( client_socket , buffer, 1024); 
+	HTTPRequest request = HTTPRequest(buffer);
+	std::cout << request.GetHost() << request.GetMethod() << request.GetPath() << std::endl;
+    send(client_socket , msg , strlen(msg) , 0 ); 
+    printf("Hello message sent\n"); 
 
 	return 0;
 }
