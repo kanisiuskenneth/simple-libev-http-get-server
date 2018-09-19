@@ -14,6 +14,7 @@ string HTTPResponse::ToString() {
     ss << "HTTP/1.1 " << this->status << " " << this->status_message << endl;
     ss << "Content-Type: text/html" << endl;
     ss << "Content-Length: " << this->body.length() << endl;
+    ss << "Connection: close" << endl;
     ss << endl;
     ss << this->body << endl;
     return ss.str();

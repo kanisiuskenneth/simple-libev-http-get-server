@@ -15,6 +15,7 @@
 #define PORT 8080
 
 int main() {
+	int count = 0;
 	int server_fd, client_socket, valread;
 	struct sockaddr_in client_address;
 	int client_addrlen = sizeof(client_address);
@@ -46,22 +47,25 @@ int main() {
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
+	while(1) {
+		if ((client_socket = accept(server_fd, (struct sockaddr*)&client_address, (socklen_t*)&client_addrlen)) < 0) {
+			perror("accept");
+			exit(EXIT_FAILURE);
+		}
 
-	if ((client_socket = accept(server_fd, (struct sockaddr*)&client_address, (socklen_t*)&client_addrlen)) < 0) {
-		perror("accept");
-		exit(EXIT_FAILURE);
+		count++;
+
+		
+		valread = read( client_socket , buffer, 1024); 
+		HTTPRequest request = HTTPRequest(buffer);
+		std::string msg = File("assets"+request.GetPath()).GetContent();
+		std::cout << request.GetHost() << " " << request.GetMethod() << " " << request.GetPath() << std::endl;
+		HTTPResponse response = HTTPResponse(200, "OK", msg);
+		const char *response_string = response.ToString().c_str();
+		std::cout << count << std::endl;
+
+		send(client_socket , response_string, strlen(response_string), 0 ); 
+		close(client_socket);
 	}
-
-	
-	valread = read( client_socket , buffer, 1024); 
-	HTTPRequest request = HTTPRequest(buffer);
-	std::string msg = File("assets"+request.GetPath()).GetContent();
-	std::cout << request.GetHost() << request.GetMethod() << request.GetPath() << std::endl;
-	HTTPResponse response = HTTPResponse(200, "OK", msg);
-	const char *response_string = response.ToString().c_str();
-	std::cout << response_string << std::endl;
-
-    send(client_socket , response_string, strlen(response_string), 0 ); 
-	
 	return 0;
 }
