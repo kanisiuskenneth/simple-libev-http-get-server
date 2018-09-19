@@ -7,8 +7,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <sys/types.h>
-#include <request.h>
-#include <response.h>
+#include <http/request.h>
+#include <http/response.h>
 #define PORT 8080
 
 int main() {
