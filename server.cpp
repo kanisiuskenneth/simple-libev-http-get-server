@@ -1,6 +1,5 @@
 #include <iostream>
-#include <event2/event.h>
-#include <event2/http.h>
+#include <ev.h>
 
 int main() {
 	std::cout << "It works" << std::endl;

@@ -1,2 +1,2 @@
 all:
-	g++ -o server server.cpp -levent
+	g++ -o server server.cpp
