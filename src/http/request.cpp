@@ -4,7 +4,7 @@ HTTPRequest::HTTPRequest(const char* http_request) {
     char c_host[50];
     char c_method[8];
     char c_path[50];
-    sscanf(http_request, "%s %s %*s %*s %s", c_method, c_host, c_path);
+    sscanf(http_request, "%s %s %*s %*s %s", c_method, c_path, c_host);
     host = std::string(c_host);
     method = std::string(c_method);
     path = std::string(c_path); 

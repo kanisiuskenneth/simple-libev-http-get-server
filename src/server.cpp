@@ -52,17 +52,16 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 
-	std::string msg = File("assets/page1.html").GetContent();
 	
 	valread = read( client_socket , buffer, 1024); 
 	HTTPRequest request = HTTPRequest(buffer);
+	std::string msg = File("assets"+request.GetPath()).GetContent();
 	std::cout << request.GetHost() << request.GetMethod() << request.GetPath() << std::endl;
 	HTTPResponse response = HTTPResponse(200, "OK", msg);
 	const char *response_string = response.ToString().c_str();
 	std::cout << response_string << std::endl;
 
     send(client_socket , response_string, strlen(response_string), 0 ); 
-    printf("Hello message sent\n"); 
-
+	
 	return 0;
 }
