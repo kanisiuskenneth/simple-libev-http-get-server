@@ -14,13 +14,13 @@ OBJ_FILES := $(addprefix $(OBJ)/,$(patsubst %.cpp,%.o,$(SRC_FILES)))
 
 
 CC:= g++
-CC_FLAG= -Wall -I $(SRC) -std=c++11 
+CC_FLAG= -Wall -I $(SRC) -std=c++11
 
 all: $(EXEC)
 
 
 $(EXEC):$(OBJ_FILES)
-	@$(CC) $^ -o $@ 
+	@$(CC) $^ -o $@ -lev
 	@echo "Linking: $@"
 $(OBJ_FOLDERS):
 	@echo "Make Directory : $@"
