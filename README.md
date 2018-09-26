@@ -152,6 +152,55 @@ Memasukkan perintah berikut untuk menjalankan program server Libev
 $ make exec
 ```
 
+### Hasil Testing Server Libev
+1. Testing C10K 500 byte HTML Page
+	<table>
+		<tr>
+			<th>Eksperimen</th>
+			<th>Response Time</th>
+			<th>Memory Usage</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>Timeout (7130 reqs)</td>
+			<td>~100000 KB</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>Timeout (7241 reqs)</td>
+			<td>~105000 KB</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>Timeout (7251 reqs)</td>
+			<td>~113000 KB</td>
+		</tr>
+	</table>
+
+2. Testing C10K 20 KB HTML Page
+	<table>
+		<tr>
+			<th>Eksperimen</th>
+			<th>Response Time</th>
+			<th>Memory Usage</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>Timeout (7664 reqs)</td>
+			<td>~104000 KB</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>Timeout (6678 reqs)</td>
+			<td>~98000 KB</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>Timeout (7105 reqs)</td>
+			<td>~97000 KB</td>
+		</tr>
+	</table>
+
 ## Authors
 Kanisius Kenneth Halim / 13515008
 

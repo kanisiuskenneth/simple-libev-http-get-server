@@ -81,8 +81,6 @@ void accept_socket(int fd, short ev, void* arg) {
 	socklen_t client_len = sizeof(client_address);
 	struct client* client;
 
-	std::cout << "socket accepted" << std::endl;
-
 	client_fd = accept(fd, (struct sockaddr*)&client_address, &client_len);
 	if (client_fd == -1) {
 		warn("accept failed");
