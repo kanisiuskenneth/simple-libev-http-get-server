@@ -44,8 +44,9 @@ void socket_read(int fd, short ev, void *arg) {
 	struct client *client = (struct client *) arg;
 
 	char buffer[8196] = {0};
-	int len, wlen;
+	int len;
 
+	std::cout << "Processing request..." << std::endl;
 	len = read(fd, buffer, sizeof(buffer));
 
 	if (len == 0) {
@@ -62,20 +63,16 @@ void socket_read(int fd, short ev, void *arg) {
 		return;
 	}
 
-	// wlen = write(fd, buffer, len);
-	// if (wlen < len) {
-	// 	printf("wlen is less than len");
-	// }
-
 	HTTPRequest request = HTTPRequest(buffer);
 	std::string msg = File("assets"+request.GetPath()).GetContent();
 	std::cout << request.GetHost() << " " << request.GetMethod() << " " << request.GetPath() << std::endl;
-	std::cout << msg << std::endl;
 	HTTPResponse response = HTTPResponse(200, "OK", msg);
 	const char *response_string = response.ToString().c_str();
 
-	send(fd , response_string, strlen(response_string), 0 ); 
-	close(fd);	
+	send(fd, response_string, strlen(response_string), 0); 
+	close(fd);
+	event_del(&client->ev_read);
+	free(client);
 }
 
 void accept_socket(int fd, short ev, void* arg) {
@@ -101,8 +98,7 @@ void accept_socket(int fd, short ev, void* arg) {
 		err(1, "malloc failed");
 	}
 
-	event_set(&client->ev_read, client_fd, EV_READ|EV_PERSIST, socket_read, client);
-
+	event_set(&client->ev_read, client_fd, EV_READ|EV_PERSIST, socket_read, &client->ev_read);
 	event_add(&client->ev_read, NULL);
 
 	printf("Accepted connection from %s\n", inet_ntoa(client_address.sin_addr));
@@ -151,26 +147,5 @@ int main() {
 	event_add(&ev_accept, NULL);
 
 	event_dispatch();
-
-	// while(1) {
-	// 	if ((client_socket = accept(server_fd, (struct sockaddr*)&client_address, (socklen_t*)&client_addrlen)) < 0) {
-	// 		perror("accept");
-	// 		exit(EXIT_FAILURE);
-	// 	}
-
-	// 	count++;
-
-		
-	// 	valread = read( client_socket , buffer, 1024); 
-	// 	HTTPRequest request = HTTPRequest(buffer);
-	// 	std::string msg = File("assets"+request.GetPath()).GetContent();
-	// 	std::cout << request.GetHost() << " " << request.GetMethod() << " " << request.GetPath() << std::endl;
-	// 	HTTPResponse response = HTTPResponse(200, "OK", msg);
-	// 	const char *response_string = response.ToString().c_str();
-	// 	std::cout << count << std::endl;
-
-	// 	send(client_socket , response_string, strlen(response_string), 0 ); 
-	// 	close(client_socket);
-	// }
 	return 0;
 }
