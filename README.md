@@ -1,22 +1,37 @@
-# Simple Libev HTTP Server
+# Tugas Kecil 1 IF4031 - Simple Libev HTTP Server
 
-## Description
-Simple Libev HTTP Server that provides access to 2 different static pages with memory of 500B and 20KB.
+## Deskripsi
+HTTP Server dengan menggunakan Libev yang memberikan akses ke dua buah HTML page dengan ukuran 500 bytes dan 20KB.
 
-## Installation Guide
+## Server Benchmark
 
-### Server Installation
-1. Go to the project folder
-2. Enter the following command
+### Tools Benchmark yang digunakan
+Apache Bench (Ab)
+
+### Cara melakukan testing
+1. Memasukkan perintah sebagai berikut untuk melakukan benchmarking terhadap page 500 bytes.
+	```shell
+	ab -n 10000 -c 10000 http://127.0.0.1:8080/500b.html
+	```
+
+2. Memasukkan perintah sebagai berikut untuk melakukan benchmarking terhadap page 20KB.
+	```shell
+	ab -n 10000 -c 10000 http://127.0.0.1:8080/20k.html
+	```
+
+## Server Libev
+
+### Petunjuk Instalasi Server Libev
+1. Masuk ke folder proyek Libev
+2. Memasukkan perintah berikut untuk melakukan compilation.
+	```shell
+	$ make
+	```
+
+### Eksekusi Server Libev
+Memasukkan perintah berikut untuk menjalankan program server Libev
 ```shell
-$ make
-```
-
-### Running The Server
-1. Go to the project folder
-2. Enter the following command
-```shell
-$ ./server
+$ make exec
 ```
 
 ## Authors
