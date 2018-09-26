@@ -20,7 +20,7 @@ all: $(EXEC)
 
 
 $(EXEC):$(OBJ_FILES)
-	@$(CC) $^ -o $@ -lev
+	@$(CC) $^ -o $@ -levent
 	@echo "Linking: $@"
 $(OBJ_FOLDERS):
 	@echo "Make Directory : $@"
